@@ -1,0 +1,78 @@
+#include <SPI.h>
+#include <RadioLib.h>
+
+// SX1278 connected to ESP32
+// NSS/CS = GPIO 5
+// DIO0   = GPIO 26
+// RESET  = GPIO 14
+// DIO1   = unused
+SX1278 radio = new Module(5, 26, 14, -1);
+
+void setup() {
+  Serial.begin(115200);
+  delay(1000);
+
+  Serial.println();
+  Serial.println("================================");
+  Serial.println("TerraLink LoRa Gateway");
+  Serial.println("================================");
+
+  // Initialize SX1278
+  int state = radio.begin(
+    433.0,   // Frequency in MHz
+    125.0,   // Bandwidth in kHz
+    9,       // Spreading Factor
+    7,       // Coding Rate 4/7
+    0x12,    // Sync word
+    17,      // Output power (not important for receiver)
+    8        // Preamble length
+  );
+
+  if (state == RADIOLIB_ERR_NONE) {
+    Serial.println("SX1278 initialized successfully!");
+    Serial.println("Waiting for LoRa packets...");
+    Serial.println();
+  }
+  else {
+    Serial.print("SX1278 initialization failed!");
+    Serial.print(" Error code: ");
+    Serial.println(state);
+
+    while (true) {
+      delay(1000);
+    }
+  }
+}
+
+void loop() {
+
+  String receivedData;
+
+  // Wait for a packet
+  int state = radio.receive(receivedData);
+
+  if (state == RADIOLIB_ERR_NONE) {
+
+    Serial.println("========== PACKET RECEIVED ==========");
+
+    Serial.print("Data: ");
+    Serial.println(receivedData);
+
+    Serial.print("RSSI: ");
+    Serial.print(radio.getRSSI());
+    Serial.println(" dBm");
+
+    Serial.print("SNR: ");
+    Serial.print(radio.getSNR());
+    Serial.println(" dB");
+
+    Serial.println("=====================================");
+    Serial.println();
+  }
+
+  else if (state != RADIOLIB_ERR_RX_TIMEOUT) {
+
+    Serial.print("Receive error: ");
+    Serial.println(state);
+  }
+}
