@@ -1,7 +1,0 @@
-libraries needed:
-streamlit
-pandas
-plotly
-
-run this in terminal:
-python -m streamlit run app.py
