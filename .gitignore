@@ -1,0 +1,39 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Editor settings
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.venv/
+venv/
+ENV/
+.env
+.python-version
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Build and output artifacts
+build/
+dist/
+*.egg-info/
+
+# Local runtime data
+*.db
+*.sqlite3
+*.log
+terralink_dashboard/terralink.db
+
+# OS generated files
+Thumbs.db
